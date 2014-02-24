@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.blueferdi.concurrent.railway.train;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -14,35 +15,60 @@ public class Train {
 
     private final int CAPACITY;
 
+     private final AtomicInteger stationNo = new AtomicInteger();
+
     private final long[] items;
 
     private int index = 0;
 
-    public Train(int capacity){
+    public Train(int capacity) {
         this.CAPACITY = capacity;
         items = new long[CAPACITY];
     }
 
-    public int put(long[] items,int length){
-//        int remain = CAPACITY - index;
-//        int no = remain >= length?length:remain;
-        System.arraycopy(items,0, this.items,index, length);
-        index += length;
-        return length;
+    public void next(){
+        stationNo.getAndIncrement();
     }
 
-    public int capacity(){
+    public int getStationNo(){
+        return stationNo.get();
+    }
+
+    /**
+     * return capacity of this train
+     * @return
+     */
+    public int capacity() {
         return this.CAPACITY;
     }
 
-    public int takeOffNo(int station){
+    /**
+     * put all items to train,station should check the number of the items
+     *
+     * @param items
+     */
+    public void put(long[] items) {
+        System.arraycopy(items, 0, this.items, 0, items.length);
+        index += items.length;
+    }
+
+    /**
+     * return how many items will be taked off
+     * @param station
+     * @return
+     */
+    public int takeOffNo(int station) {
         return index;
     }
 
-    public int takeOff(int station,long[] items){
+    /**
+     * take all the items to input array
+     * @param station
+     * @param items
+     */
+    public void takeOff(int station, long[] items) {
         System.arraycopy(this.items, 0, items, 0, index);
-        index -= items.length;
-        return index;
+        index = 0;
     }
 
 }

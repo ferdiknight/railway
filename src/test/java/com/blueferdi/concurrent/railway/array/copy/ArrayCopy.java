@@ -38,11 +38,29 @@ public class ArrayCopy {
             src[i] = k;
         }
 
+        for(int i=0;i<10000000;i++)
+        {
+            System.arraycopy(src, 0, dest, 0, 2048);
+        }
+
+
+
         long start = System.nanoTime();
 
-        for(int i=0;i<1000000;i++)
+        for(int i=0;i<10000000;i++)
         {
             testSystemArrayCopy(src,dest,2048);
+
+        }
+
+        System.out.println(System.nanoTime() - start);
+
+        start = System.nanoTime();
+
+         for(int i=0;i<10000000;i++)
+        {
+            testLoopCopy(src,dest,2048);
+
         }
 
         System.out.println(System.nanoTime() - start);

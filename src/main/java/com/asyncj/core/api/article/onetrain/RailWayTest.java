@@ -20,15 +20,25 @@ public class RailWayTest {
 
             @Override
             public void run() {
-
+                long time = 0;
+                long[] items = new long[2048];
                 while (lastValue < n) {
                     Train train = railway.waitTrainOnStation(1);
                     int count = train.goodsCount();
+
+                    long start = System.nanoTime();
+
                     for (int i = 0; i < count; i++) {
                         lastValue = train.getGoods(i);
+                        items[i] = lastValue;
                     }
+//                    train.getGoods(items);
+
+                    time += System.nanoTime() - start;
+
                     railway.sendTrain();
                 }
+                System.out.println(time);
             }
         }.start();
 
@@ -44,9 +54,10 @@ public class RailWayTest {
                 items[j] = i; // 将货物装到列车上
             }
 
-            for (int j = 0; j < capacity; j++) {
-                train.addGoods(items[j]);
-            }
+//            for (int j = 0; j < capacity; j++) {
+//                train.addGoods(items[j]);
+//            }
+            train.addGoods(items);
             railway.sendTrain();
 
             if (i % 1000000 == 0) {

@@ -20,9 +20,19 @@ public class Train {
         goodsArray[index++] = i;
     }
 
+    public void addGoods(long[] items){
+        System.arraycopy(items, 0, goodsArray, 0,items.length);
+        index += items.length;
+    }
+
     public long getGoods(int i) {
         index--;
         return goodsArray[i];
+    }
+
+    public void getGoods(long[] items){
+        System.arraycopy(goodsArray, 0, items, 0, index);
+        index = 0;
     }
 
     public int getCapacity() {

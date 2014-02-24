@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.blueferdi.concurrent.railway;
 
 import com.blueferdi.concurrent.railway.train.Train;
@@ -15,25 +14,34 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Railway {
 
-    private Train train;
+    private final int capacity;
+    private final int stationCount = 2;
+    private int count = 0;
+    private final Train[] trains;
+    private final AtomicInteger[] stationNo;
 
-    private final AtomicInteger stationNo = new AtomicInteger();
+    public Railway(int capacity){
+        this.capacity = capacity;
+        trains = new Train[this.capacity];
+        stationNo = new AtomicInteger[this.capacity];
+    }
 
-    public Train waitForIn(int stationNo){
-        while(this.stationNo.get() % 2 != stationNo){
+    public Train waitForIn(int stationNo,int trainNo) {
+
+        while (this.stationNo[trainNo].get() % stationCount != stationNo) {
             Thread.yield();
         }
-
-        return train;
+        return trains[trainNo];
     }
 
-    public void setTrain(Train train){
-        this.train = train;
+    public int registerTrain(Train train) {
+        this.trains[count] = train;
+        stationNo[count] = new AtomicInteger();
+        return count++;
     }
 
-    public void send(){
-        stationNo.getAndIncrement();
+    public void send(int trainNo) {
+        stationNo[trainNo].getAndIncrement();
     }
-
 
 }
