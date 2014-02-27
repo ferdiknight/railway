@@ -8,7 +8,7 @@ import java.math.BigInteger;
  *  the producer station is always full when the train comming
  * @author tongyin.ty
  */
-public class TestOneTrainOnOneRailwayWithSPSC {
+public class TestMultiTrainsOnOneRailwayWithSPSC {
 
     public static void main(String[] args){
         testRailway();
@@ -16,8 +16,8 @@ public class TestOneTrainOnOneRailwayWithSPSC {
 
     public static void testRailway()
     {
-        final int trainNumbers = 16;
-        final int capacity = 1024;
+        final int trainNumbers = 8;
+        final int capacity = 2 * 1024;
         final Railway r1 = new Railway(trainNumbers);
 
         for(int i=0;i<trainNumbers;i++){
@@ -66,7 +66,7 @@ public class TestOneTrainOnOneRailwayWithSPSC {
                 System.out.format("ops/sec = %,d\n", ops);
                 System.out.format("trains/sec = %,d\n", ops / capacity);
                 System.out.format("latency nanos = %.3f%n\n",
-                    duration / count.floatValue());
+                    duration / count.floatValue() * capacity);
             }
 
         }
