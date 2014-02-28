@@ -4,19 +4,27 @@
  * and open the template in the editor.
  */
 
-package com.blueferdi.concurrent.railway.first;
+package com.blueferdi.concurrent.railway.fourth;
 
-import java.util.LinkedList;
+import com.blueferdi.concurrent.railway.first.Man;
 
 /**
  *
  * @author tongyin.ty
  */
 public class Train {
+    private final Man[] box;
 
-    private final LinkedList<Man> queue = new LinkedList<Man>();
+    private final int CAPACITY;
+
+    private int index = 0;
 
     private int no;
+
+    public Train(int CAPACITY){
+        this.CAPACITY = CAPACITY;
+        this.box = new Man[this.CAPACITY];
+    }
 
     public void setNo(int no){
         this.no = no;
@@ -27,12 +35,12 @@ public class Train {
     }
 
     public void getOn(Man man){
-        queue.addLast(man);
+        box[index] = man;
+        index++;
     }
 
     public Man takeOff(){
-        return queue.isEmpty()?null:queue.removeFirst();
+        index--;
+        return box[index];
     }
-
-
 }

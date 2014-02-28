@@ -3,28 +3,38 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.blueferdi.concurrent.railway.first;
+package com.blueferdi.concurrent.railway.third;
+
+import com.blueferdi.concurrent.railway.first.Man;
+import com.blueferdi.concurrent.railway.first.Station;
+import com.blueferdi.concurrent.railway.first.Train;
 
 /**
  *
  * @author tongyin.ty
  */
-public class RailWayTest {
+public class MultiTrainRailwayTest {
 
     public static final int ITERATION = 50000000;
-    public static final int CAPACITY = 2048;
+    public static final int CAPACITY = 2 * 1024;
 
     public static void main(String[] args) {
-        for(int i=0;i<20;i++){
-            RailWayTest.test();
+        for (int i = 0; i < 20; i++) {
+            MultiTrainRailwayTest.test();
         }
     }
 
     public static void test() {
-
-        final Railway r1 = new Railway();
+        int trainNos = 16;
+        final MultiTrainRailway r1 = new MultiTrainRailway(trainNos);
         final Station in = new Station(0);
         final Station out = new Station(1);
+
+        for(int i=0;i<trainNos;i++){
+            Train t = new Train();
+            r1.register(t);
+        }
+
 
         new Thread() {
 
@@ -50,7 +60,7 @@ public class RailWayTest {
                         i++;
                     }
 
-                    r1.send();
+                    r1.send(t.getNo());
                 }
 
             }
@@ -76,7 +86,7 @@ public class RailWayTest {
 
             }
 
-            r1.send();
+            r1.send(t.getNo());
 
         }
 
@@ -87,7 +97,5 @@ public class RailWayTest {
         System.out.format("ops/sec       = %,d\n", ops);
         System.out.format("trains/sec    = %,d\n", ops / CAPACITY);
         System.out.format("latency nanos = %.3f%n\n", duration / (float) (i) * (float) CAPACITY);
-
     }
-
 }

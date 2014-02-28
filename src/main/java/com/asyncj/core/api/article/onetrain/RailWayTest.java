@@ -6,14 +6,19 @@ package com.asyncj.core.api.article.onetrain;
  * @since 23.11.13
  */
 public class RailWayTest {
+
+    public static final int ITERATION = 50000000;
+    public static final int CAPACITY = 2048;
+
     public static void main(String[] args) {
-        new RailWayTest().testRailWay();
+
+        for(int i=0;i<50;i++){
+            RailWayTest.testRailWay();
+        }
     }
 
-    public void testRailWay() {
+    public static void testRailWay() {
         final Railway railway = new Railway();
-
-        final long n = 2000000000l;
 
         new Thread() {
             long lastValue = 0;
@@ -21,28 +26,23 @@ public class RailWayTest {
             @Override
             public void run() {
                 long time = 0;
-                while (lastValue < n) {
+                while (lastValue < ITERATION) {
                     Train train = railway.waitTrainOnStation(1);
                     int count = train.goodsCount();
-
-                    long start = System.nanoTime();
 
                     for (int i = 0; i < count; i++) {
                         lastValue = train.getGoods(i);
                     }
 
-                    time += System.nanoTime() - start;
-
                     railway.sendTrain();
                 }
-                System.out.println(time);
             }
         }.start();
 
         final long start = System.nanoTime();
         long[] items = new long[2048];
         long i = 0;
-        while (i < n) {
+        while (i < ITERATION) {
             Train train = railway.waitTrainOnStation(0);
             int capacity = train.getCapacity();
 
@@ -56,16 +56,13 @@ public class RailWayTest {
             }
             railway.sendTrain();
 
-            if (i % 1000000 == 0) {
-                final long duration = System.nanoTime() - start;
-
-                final long ops = (i * 1000L * 1000L * 1000L) / duration;
-
-                System.out.format("ops/sec       = %,d\n", ops);
-                System.out.format("trains/sec    = %,d\n", ops / Train.CAPACITY);
-                System.out.format("latency nanos = %.3f%n\n", duration / (float)(i) * (float) Train.CAPACITY);
-
-            }
         }
+        final long duration = System.nanoTime() - start;
+
+        final long ops = (i * 1000L * 1000L * 1000L) / duration;
+
+        System.out.format("ops/sec       = %,d\n", ops);
+        System.out.format("trains/sec    = %,d\n", ops / Train.CAPACITY);
+        System.out.format("latency nanos = %.3f%n\n", duration / (float) (i) * (float) Train.CAPACITY);
     }
 }

@@ -20,8 +20,9 @@ public class StationTest {
 
     public static void main(String[] args){
 
-        StationTest.test();
-
+        for(int i=0;i<20;i++){
+            StationTest.test();
+        }
     }
 
 
